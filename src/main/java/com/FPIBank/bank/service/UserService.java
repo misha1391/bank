@@ -13,6 +13,14 @@ import java.util.Map;
 @Service
 public class UserService {
     private List<User> users = new ArrayList<User>();
+    private User getById(int id) {
+        for (User user : users) {
+            if (user.getId() == id) {
+                return user;
+            }
+        }
+        return null;
+    }
 
     public User registerUser(int id, String name, List<Card> cards, String password) {
         User user = new User(id, name, password, cards, LocalDateTime.now());
@@ -21,6 +29,7 @@ public class UserService {
     }
     public List<User> getAllUsers() { return users; }
     public Map<String, Object> deleteUser(int id) {
+        users.remove(getById(id));
         Map<String, Object> answer = new HashMap<>();
         answer.put("success", true);
         return answer;
@@ -32,42 +41,6 @@ public class UserService {
                 user.setName(name);
                 user.setCards(cards);
                 user.setPassword(password);
-            }
-        }
-        Map<String, Object> answer = new HashMap<>();
-        answer.put("success", true);
-        return answer;
-    }
-
-    public Card createCard(int userId, int id, String number, String cvv) {
-        Card card = new Card(id, number, cvv);
-        for (User user : users) {
-            if(user.getId() == userId) {
-                user.getCards().add(card);
-            }
-        }
-        return card;
-    }
-    public List<Card> getAllCards() { return users.get(0).getCards(); }
-    public Map<String, Object> deleteCard(int userId, int id) {
-        //TODO: Сделать проверку, на отсутствие id
-        for (User user : users) {
-            if(user.getId() == userId) {
-                user.getCards().remove(id);
-            }
-        }
-        Map<String, Object> answer = new HashMap<>();
-        answer.put("Success", true);
-        return answer;
-    }
-    public Map<String, Object> updateCard(int userId, int id, String number, String cvv) {
-        //TODO: Добавить проверку на отсутствие id
-        for (User user : users) {
-            if (user.getId() == userId) {
-                for (Card card : user.getCards()) {
-                    card.setNumber(number);
-                    card.setCvv(cvv);
-                }
             }
         }
         Map<String, Object> answer = new HashMap<>();
