@@ -19,14 +19,33 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
-    }
+    public List<User> getAllUsers() { return userService.getAllUsers(); }
 
     @PostMapping("/register")
-    public User register(@RequestBody Map<String, String> body) {
-        List<Card> cards = new ArrayList<>();
+    public User register(@RequestBody Map<String, Object> body) {
+        //TODO: Сделать обработчик ошибок
+        return userService.registerUser(Integer.parseInt((String)body.get("id")), (String)body.get("name"), (List<Card>)body.get("cards"), (String)body.get("password"));
+    }
+    @DeleteMapping("/user")
+    public Map<String, Object> deleteUser(@RequestBody Map<String, Object> body) {
+        return userService.deleteUser((int)body.get("id"));
+    }
+    @PutMapping("/user")
+    public Map<String, Object> updateUser(@RequestBody Map<String, Object> body) {
+        return userService.updateUser((int)body.get("id"), (String)body.get("name"), (List<Card>)body.get("cards"), (String)body.get("password"));
+    }
 
-        return userService.registerUser(Integer.parseInt(body.get("id")), body.get("name"), cards, body.get("password"));
+    @PostMapping("/card")
+    public Card createCard(@RequestBody Map<String, Object> body) {
+        //TODO: Сделать обработчик ошибок
+        return userService.createCard((int)body.get("userId"), (int)body.get("id"), (String)body.get("number"), (String)body.get("cvv"));
+    }
+    @DeleteMapping("/card")
+    public Map<String, Object> deleteCard(@RequestBody Map<String, Object> body) {
+        return userService.deleteCard((int)body.get("userId"), (int)body.get("id"));
+    }
+    @PutMapping("/card")
+    public Map<String, Object> updateCard(@RequestBody Map<String, Object> body) {
+        return userService.updateCard((int)body.get("userId"), (int)body.get("id"), (String)body.get("number"), (String)body.get("cvv"));
     }
 }
